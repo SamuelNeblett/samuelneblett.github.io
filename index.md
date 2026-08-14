@@ -1,8 +1,22 @@
 # Samuel Neblett's ePortfolio
 Created for CS-499 at SNHU
 
-## Artifact Code Review:
-<https://youtu.be/jWI7UXA1J_U>
+## Professional Self-Assessment
+
+## Project Artifacts
+### Full code artifact repository:
+- [https://github.com/SamuelNeblett/CS-499-Breakout-Game](https://github.com/SamuelNeblett/CS-499-Breakout-Game)
+
+### C++ project from CS-330 that I later enhanced for CS-499:
+- [Full C++ project](https://github.com/SamuelNeblett/CS-499-Breakout-Game/tree/main/OriginalArtifact_CppCode/CS-330_Artifact/8-2_Assignment)
+- [Primary C++ code of focus](https://github.com/SamuelNeblett/CS-499-Breakout-Game/blob/main/OriginalArtifact_CppCode/CS-330_Artifact/8-2_Assignment/Source/MainCode.cpp)
+
+### Enhancement of my CS-330 C++ project for CS-499:
+- [Completed, enhanced project ported to Python](https://github.com/SamuelNeblett/CS-499-Breakout-Game/tree/main/Enhanced_PythonPort)
+- [Primary Python code of focus](https://github.com/SamuelNeblett/CS-499-Breakout-Game/blob/main/Enhanced_PythonPort/Neblett_BreakoutGame.py)
+
+## Artifact Code Review
+- [Video code review of the original C++ project, pre-enhancements](https://youtu.be/jWI7UXA1J_U)
 
 ## Enhancement One: Software Design and Engineering - Narrative
 1.	Briefly describe the artifact. What is it? When was it created?
