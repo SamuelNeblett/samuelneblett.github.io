@@ -1,24 +1,21 @@
-# Samuel Neblett's ePortfolio
-Created for CS-499 at SNHU
+# Professional Self-Assessment
 
-## Professional Self-Assessment
-
-## Project Artifacts
-### Full code artifact repository:
+# Project Artifacts
+## Full code artifact repository:
 - [https://github.com/SamuelNeblett/CS-499-Breakout-Game](https://github.com/SamuelNeblett/CS-499-Breakout-Game)
 
-### C++ project from CS-330 that I later enhanced for CS-499:
+## C++ project from CS-330 that I later enhanced for CS-499:
 - [Full C++ project](https://github.com/SamuelNeblett/CS-499-Breakout-Game/tree/main/OriginalArtifact_CppCode/CS-330_Artifact/8-2_Assignment)
 - [Primary C++ code of focus](https://github.com/SamuelNeblett/CS-499-Breakout-Game/blob/main/OriginalArtifact_CppCode/CS-330_Artifact/8-2_Assignment/Source/MainCode.cpp)
 
-### Enhancement of my CS-330 C++ project for CS-499:
+## Enhancement of my CS-330 C++ project for CS-499:
 - [Completed, enhanced project ported to Python](https://github.com/SamuelNeblett/CS-499-Breakout-Game/tree/main/Enhanced_PythonPort)
 - [Primary Python code of focus](https://github.com/SamuelNeblett/CS-499-Breakout-Game/blob/main/Enhanced_PythonPort/Neblett_BreakoutGame.py)
 
-## Artifact Code Review
+# Artifact Code Review
 - [Video code review of the original C++ project, pre-enhancements](https://youtu.be/jWI7UXA1J_U)
 
-## Enhancement One: Software Design and Engineering - Narrative
+# Enhancement One: Software Design and Engineering - Narrative
 1.	Briefly describe the artifact. What is it? When was it created?
 The artifact selected for the Software Design and Engineering enhancement is a Breakout-like game where the player moves a paddle at the bottom of the screen and launches balls towards bricks to break them with the goal of clearing the screen. The original artifact, before my enhancements, was a C++ project created for the 8-2 Assignment: Coding Collisions assignment in CS-330 Computational Graphics and Visualization. This project was originally created on May 26th, 2026.
 2.	Justify the inclusion of the artifact in your ePortfolio. Why did you select this item? What specific components of the artifact showcase your skills and abilities in software development? How was the artifact improved?
@@ -28,7 +25,7 @@ I met the two outcomes I had planned to meet for the Software Design and Enginee
 4.	Reflect on the process of enhancing and modifying the artifact. What did you learn as you were creating it and improving it? What challenges did you face?
 The process of enhancing and modifying my chosen artifact went very well. I had a lot of fun converting the C++ code to Python, and I was surprised by how straightforward much of it was due to the GLFW bindings available in Python. For further enhancements, adding the new additional features was much more time-consuming than expected, mostly due to challenges with the GUI system, but I was able to get everything working well in the end. The biggest challenge I faced was creating the GUI. I initially tried using PyQt, as I had some experience with it in the past, but I could not get it to render correctly over the OpenGL content. This led me to research other GUI libraries that were compatible with OpenGL and Python, and I eventually landed on ImGui. After a few hours of debugging and trying to get PyImGui to install via pip, I discovered that it had last been updated in 2023 and did not appear to be compatible with anything newer than Python 3.11 (Jaworski). This led me to another ImGui library, “Dear ImGui Bundle”, which I was then able to utilize for GUI elements in my application (Thomet).
 
-## Enhancement Two: Algorithms and Data Structures - Narrative
+# Enhancement Two: Algorithms and Data Structures - Narrative
 1.	Briefly describe the artifact. What is it? When was it created?
 The artifact selected for the second enhancement, Algorithms and Data Structure, is the same artifact that I selected for the first enhancement, Software Design and Engineering, a Breakout-like game originally created as a C++ project for CS-330 Computational Graphics and Visualization as the 8-2 assignment Coding Collisions. This artifact was originally created on May 26th, 2026.
 2.	Justify the inclusion of the artifact in your ePortfolio. Why did you select this item? What specific components of the artifact showcase your skills and abilities in algorithms and data structure? How was the artifact improved?
@@ -68,9 +65,7 @@ The trajectory calculations were the most difficult part of this enhancement. AA
 
 
 
-
-
-## Enhancement Three: Databases - Narrative
+# Enhancement Three: Databases - Narrative
 1.	Briefly describe the artifact. What is it? When was it created?
 The original artifact selected for the Databases enhancement is the 8-2 Coding Collisions assignment, originally created for CS-330 Computational Graphics and Visualization as a C++ project that functions as a simplified Breakout-like game. This artifact was also used for the first enhancement, Software Design and Engineering, and the second enhancement, Algorithms and Data Structures. This artifact was originally created on May 26th, 2026.
 2.	Justify the inclusion of the artifact in your ePortfolio. Why did you select this item? What specific components of the artifact showcase your skills and abilities in software development? How was the artifact improved?
