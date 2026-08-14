@@ -1,4 +1,4 @@
-Test
+Hello! I am Sam Neblett and this is the ePortfolio I developed for CS-499 at SNHU as part of my Capstone project.
 
 # Professional Self-Assessment
 _In work..._
