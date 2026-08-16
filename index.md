@@ -27,6 +27,27 @@ The technical artifacts presented in this ePortfolio represent my growth through
 # Artifact Code Review
 - [Video code review of the original C++ project, pre-enhancements](https://youtu.be/jWI7UXA1J_U)
 
+# Project Enhancement Narratives
+The enhanced project described above was created for my Capstone project for CS-499 at SNHU. The Capstone project in this ePortfolio demonstrates the mastery of the following CS-499 course outcomes:
+1. Employ strategies for building collaborative environments that enable diverse audiences to support organizational decision making in the field of computer science
+2. Design, develop, and deliver professional-quality oral, written, and visual communications that are coherent, technically sound, and appropriately adapted to specific audiences and contexts
+3. Design and evaluate computing solutions that solve a given problem using algorithmic principles and computer science practices and standards appropriate to its solution, while managing the trade-offs involved in design choices
+4. Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in computing practices for the purpose of implementing computer solutions that deliver value and accomplish industry-specific goals
+5. Develop a security mindset that anticipates adversarial exploits in software architecture and designs to expose potential vulnerabilities, mitigate design flaws, and ensure privacy and enhanced security of data and resources
+
+Each of the three project enhancement categories demonstrate the following course outcomes:
+- Software Engineering and Design
+  - Course Outcome 2: Design, develop, and deliver professional-quality oral, written, and visual communications that are coherent, technically sound, and appropriately adapted to specific audiences and contexts
+  - Course Outcome 4: Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in computing practices for the purpose of implementing computer solutions that deliver value and accomplish industry-specific goals
+- Algorithms and Data Structures
+  - Course Outcome 3: Design and evaluate computing solutions that solve a given problem using algorithmic principles and computer science practices and standards appropriate to its solution, while managing the trade-offs involved in design choices
+- Databases
+  - Course Outcome 1: Employ strategies for building collaborative environments that enable diverse audiences to support organizational decision making in the field of computer science
+  - Course Outcome 5: Develop a security mindset that anticipates adversarial exploits in software architecture and designs to expose potential vulnerabilities, mitigate design flaws, and ensure privacy and enhanced security of data and resources
+
+My full enhancement plan for this project can be found here:
+- [Enhancement Plan](https://github.com/SamuelNeblett/CS-499-Breakout-Game/blob/main/EnhancementPlan.docx)
+
 # Enhancement One: Software Design and Engineering - Narrative
 1.	Briefly describe the artifact. What is it? When was it created?
 
