@@ -55,7 +55,105 @@ The artifact selected for the Software Design and Engineering enhancement is a B
 
 2.	Justify the inclusion of the artifact in your ePortfolio. Why did you select this item? What specific components of the artifact showcase your skills and abilities in software development? How was the artifact improved?
 
-This artifact was chosen for my ePortfolio because it demonstrates my knowledge of both C++ and Python, as well as my ability to port a project from one language to another. I selected this item because I currently work in real-time app and game development, but I primarily build applications within the Unity and Unreal engines, so the inclusion of this application demonstrates my ability to work outside of the constraints of game engines for developing real-time applications. Specifically, I want to showcase my ability to create game loops outside of game engines, which this project allows me to do. I also want to showcase my knowledge of Python, which is a language that I have not had much experience using in the professional space. This artifact was improved from its original state by porting it to Python, a more user-friendly and readable language compared to C++. Multiple new features were added during this enhancement including the inclusion of GUI elements for a Main Menu, score tracking, life tracking, level progression across 3 levels, and new brick properties that allow for multiple hits before being destroyed. 
+This artifact was chosen for my ePortfolio because it demonstrates my knowledge of both C++ and Python, as well as my ability to port a project from one language to another. I selected this item because I currently work in real-time app and game development, but I primarily build applications within the Unity and Unreal engines, so the inclusion of this application demonstrates my ability to work outside of the constraints of game engines for developing real-time applications. Specifically, I want to showcase my ability to create game loops outside of game engines, which this project allows me to do. I also want to showcase my knowledge of Python, which is a language that I have not had much experience using in the professional space. This artifact was improved from its original state by porting it to Python, a more user-friendly and readable language compared to C++. Multiple new features were added during this enhancement including the inclusion of GUI elements for a Main Menu, score tracking, life tracking, level progression across 3 levels, and new brick properties that allow for multiple hits before being destroyed.
+
+***Enhanced Python Artifact: New ImGUI Main Menu***
+```python
+  # Start a new ImGui frame
+  # This allows us to draw OpenGL GUI elements
+  impl.process_inputs()
+  imgui.new_frame()
+
+  # Menu loop
+  if current_state == "MENU":
+      imgui.begin("Main Menu")
+      if imgui.button("Start Game"):
+          score = 0
+          lives = 5
+          current_level = 1
+          load_level(current_level)
+          current_state = "PLAYING"
+      
+      if imgui.button("High Scores"):
+          print("High Scores to be implemented later...")
+
+      if imgui.button("Wipe High Scores"):
+          print("High Scores to be implemented later...")
+
+      if imgui.button("Quit"):
+          glfw.set_window_should_close(window, True)
+      
+      imgui.end()
+```
+
+***Enhanced Python Artifact: New ImGUI In-Game HUD for scores, lives, and level***
+```python
+  # Menu loop
+  if current_state == "PLAYING":
+      # Render the GUI for the score and lives
+      # Used ImGui reference for flags and positioning here:
+      # https://github.com/pthom/imgui_bundle/blob/main/bindings/imgui_bundle/demos_python/demo_imgui_bundle_intro.py
+      imgui.set_next_window_pos(imgui.ImVec2(10, 10))
+      imgui.set_next_window_bg_alpha(0.0) 
+      imgui_flags = (imgui.WindowFlags_.no_title_bar |
+                     imgui.WindowFlags_.no_resize |
+                     imgui.WindowFlags_.no_move |
+                     imgui.WindowFlags_.always_auto_resize)
+
+      imgui.begin("GUI", flags = imgui_flags)
+      imgui.text(f"Score: {score} | Lives: {lives} | Level: {current_level}")
+      imgui.end()
+```
+
+***Enhanced Python Artifact: Level Progression Logic***
+```python
+  # Check progress for level completion
+  bricks_remaining = 0
+  for brick in active_bricks:
+      # Only count bricks that are still "on" (not destroyed)
+      # and bricks that are destructible
+      if brick.onoff == OnOff.ON and brick.brick_type == BrickType.DESTRUCTABLE:
+          bricks_remaining += 1
+
+  # If all destructible bricks are destroyed, advance to the next level
+  if bricks_remaining == 0:
+      current_level += 1
+      load_level(current_level)
+```
+
+***Original C++ Artifact from CS-330: Original Brick Class***
+```cpp
+  class Brick
+  {
+  public:
+  	float red, green, blue;
+  	float x, y, width;
+  	BRICKTYPE brick_type;
+  	ONOFF onoff;
+  
+  	Brick(BRICKTYPE bt, float xx, float yy, float ww, float rr, float gg, float bb)
+  	{
+  		brick_type = bt; x = xx; y = yy, width = ww; red = rr, green = gg, blue = bb;
+  		onoff = ON;
+  	};
+```
+
+***Enhanced Python Artifact: New Brick Class***
+```python
+  # Define the Brick class to represent each brick in the game
+  class Brick:
+      def __init__(self, brick_type, xx, yy, ww, red, green, blue, hits_remaining):
+          self.red = red
+          self.green = green
+          self.blue = blue
+          self.x = xx
+          self.y = yy
+          self.width = ww
+          self.brick_type = brick_type
+          # If hits_remaining > 1, the brick requires multiple hits to clear
+          self.hits_remaining = hits_remaining
+          self.onoff = OnOff.ON
+```
 
 3.	Did you meet the course outcomes you planned to meet with this enhancement in Module One? Do you have any updates to your outcome-coverage plans?
 
