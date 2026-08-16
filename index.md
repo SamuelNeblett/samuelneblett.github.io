@@ -172,32 +172,557 @@ The artifact selected for the second enhancement, Algorithms and Data Structure,
 
 This artifact should be included in my ePortfolio because it demonstrates my ability to develop a gameplay loop that implements complex trajectory calculations, collision detection algorithms like axis-aligned bounding box (AABB) checking, and data structure creation. I selected this item because the original artifact from CS-330 handled several algorithms poorly and lumped data structures together illogically. Specifically, trajectory was very poorly calculated, only allowing the ball to go randomly in one of eight directions. The artifact also did not handle collision well, and data structures for the brick class and paddle were needlessly combined. Additionally, I was able to add a new data structure to the project to handle score tracking.
 Original C++ artifact for CS-330 – ball (originally named “Circle”) trajectory limited to 8 directions, picked randomly:
-<img width="791" height="495" alt="image" src="https://github.com/user-attachments/assets/b6c8f42c-38f4-47e0-b3d6-1e2980557be5" />
-<img width="922" height="1350" alt="image" src="https://github.com/user-attachments/assets/adc30a74-3854-4766-824c-670e6fd8496f" />
-<img width="679" height="1350" alt="image" src="https://github.com/user-attachments/assets/4065d6f0-4287-4671-9e4a-a157da1f566b" />
 
-Enhanced Python artifact – ball (originally named “Circle”) now uses velocity and calculates reflection trajectory:
-<img width="934" height="432" alt="image" src="https://github.com/user-attachments/assets/d6dff3fb-37cf-4b8e-917b-3ce6aec8e133" />
-<img width="635" height="1350" alt="image" src="https://github.com/user-attachments/assets/1069101c-df16-4cee-beb4-490a2501bb5f" />
-<img width="781" height="917" alt="image" src="https://github.com/user-attachments/assets/9b385d24-0d98-4a87-bab7-e395473f549a" />
 
-Original C++ artifact for CS-330 – collision checking for reflective bricks:
-<img width="975" height="1266" alt="image" src="https://github.com/user-attachments/assets/2b1669d1-b5dd-4dae-a212-94d7ff9e0080" />
+***Original C++ Artifact from CS-330: Ball (originally named “Circle” here) trajectory limited to 8 directions, picked randomly***
+```cpp
+  class Circle
+  {
+  public:
+  	float red, green, blue;
+  	float radius;
+  	float x;
+  	float y;
+  	float speed = 0.03;
+  	int direction; // 1=up 2=right 3=down 4=left 5 = up right   6 = up left  7 = down right  8= down left
+  	ONOFF onoff;
+  
+  	Circle(double xx, double yy, double rr, int dir, float rad, float r, float g, float b)
+  	{
+  		x = xx;
+  		y = yy;
+  		radius = rr;
+  		red = r;
+  		green = g;
+  		blue = b;
+  		radius = rad;
+  		direction = dir;
+  		onoff = ON;
+  	}
+```
+```cpp
+	int GetRandomDirection()
+	{
+		return (rand() % 8) + 1;
+	}
 
-Enhanced Python artifact – AABB collision checking, logic split to handle brick and paddle differently:
-<img width="653" height="1350" alt="image" src="https://github.com/user-attachments/assets/99048eac-1a43-4107-a654-dc75e2aa53c6" />
-<img width="954" height="1323" alt="image" src="https://github.com/user-attachments/assets/75d5c130-cb4d-4445-9e80-05834c9533cf" />
-<img width="823" height="906" alt="image" src="https://github.com/user-attachments/assets/0587a878-21dd-4df1-8d08-e44aed8328e3" />
-<img width="885" height="545" alt="image" src="https://github.com/user-attachments/assets/7ad536ec-8d5f-40fe-9798-ea0d228259f8" />
+	void MoveOneStep()
+	{
+		// If the circle is off, don't move the circle
+		if (onoff == OFF)
+		{
+			return;
+		}
 
-Original C++ artifact for CS-330 – paddle defined as a brick type data structure, with a paddle being three different bricks:
-<img width="945" height="1185" alt="image" src="https://github.com/user-attachments/assets/ce8b730c-172e-4b87-adf8-679c86edfea7" />
-<img width="975" height="163" alt="image" src="https://github.com/user-attachments/assets/37a74c49-9eb4-42ff-accd-1d200532511c" />
+		// Friction modifier to slow down as it hits things
+		float frictionMod = 0.7f;
 
-Enhanced Python artifact – paddle data structure created (distinct from brick types), player score data structure created to hold scores:
-<img width="797" height="635" alt="image" src="https://github.com/user-attachments/assets/d80597f1-f45d-40e7-98e5-4fdb9c07dcc2" />
-<img width="873" height="78" alt="image" src="https://github.com/user-attachments/assets/2e2de752-5f04-44db-b5f8-a8cb8213da9d" />
-<img width="975" height="383" alt="image" src="https://github.com/user-attachments/assets/cc42b8c6-01ee-4471-8d81-b4db32594120" />
+		if (direction == 1 || direction == 5 || direction == 6)  // up
+		{
+			// Flipped this to check top bounds
+			if (y < 1 - radius)
+			{
+				// Flipped to go up instead
+				y += speed;
+			}
+			else
+			{
+				direction = GetRandomDirection();
+				
+				// Ensure the speed never goes below 0, so it always moves
+				if (speed < 0.001f)
+				{
+					speed = 0.001f;
+				}
+				else
+				{
+					// Apply friction to slow down the ball
+					speed *= frictionMod;
+				}
+			}
+		}
+
+		if (direction == 2 || direction == 5 || direction == 7)  // right
+		{
+			if (x < 1 - radius)
+			{
+				x += speed;
+			}
+			else
+			{
+				direction = GetRandomDirection();
+
+				// Ensure the speed never goes below 0, so it always moves
+				if (speed < 0.001f)
+				{
+					speed = 0.001f;
+				}
+				else
+				{
+					// Apply friction to slow down the ball
+					speed *= frictionMod;
+				}
+			}
+		}
+
+		if (direction == 3 || direction == 7 || direction == 8)  // down
+		{
+			if (y > -1 + radius)
+			{
+				y -= speed;
+			}
+			else
+			{
+				direction = GetRandomDirection();
+
+				// Ensure the speed never goes below 0, so it always moves
+				if (speed < 0.001f)
+				{
+					speed = 0.001f;
+				}
+				else
+				{
+					// Apply friction to slow down the ball
+					speed *= frictionMod;
+				}
+			}
+		}
+
+		if (direction == 4 || direction == 6 || direction == 8)  // left
+		{
+			if (x > -1 + radius) {
+				x -= speed;
+			}
+			else
+			{
+				direction = GetRandomDirection();
+
+				// Ensure the speed never goes below 0, so it always moves
+				if (speed < 0.001f)
+				{
+					speed = 0.001f;
+				}
+				else
+				{
+					// Apply friction to slow down the ball
+					speed *= frictionMod;
+				}
+			}
+		}
+	}
+```
+
+***Enhanced Python Artifact: Ball (originally named “Circle” in the C++ project) now uses velocity and calculates reflection trajectory***
+```python
+  class Ball:
+      def __init__(self, pos_x, pos_y, radius, velocity_x, velocity_y, red, green, blue):
+          self.x = pos_x
+          self.y = pos_y
+          self.radius = radius
+          self.red = red
+          self.green = green
+          self.blue = blue
+          # Replace old direction logic with velocity
+          self.velocity_x = velocity_x
+          self.velocity_y = velocity_y
+  
+          self.onoff = OnOff.ON
+```
+```python
+  # Called once per frame to handle movement
+  def move_one_step(self):
+      global lives, can_launch, current_state
+
+      # If the ball is off, don't move the ball
+      if self.onoff == OnOff.OFF:
+          return
+
+      # Add the new velocity to the X and Y coordinates to move the ball
+      self.x += self.velocity_x
+      self.y += self.velocity_y
+
+      # Minimum velocity so we don't divide by zero
+      # and so the ball never moves too slowly
+      min_velocity = 0.005
+
+      # Friction modifier to slow down as it hits things
+      friction_mod = 0.3
+
+      # Left bounds collisions
+      if (self.x < -1 + self.radius):
+          self.x = -1 + self.radius
+
+          # Bounce off of the wall and slow down the ball
+          self.velocity_x = (self.velocity_x * -1) * friction_mod
+          
+          # Ensure the velocity never goes below 0, so it always moves
+          if abs(self.velocity_x) < min_velocity:
+              self.velocity_x = min_velocity
+
+      # Right bounds collisions
+      if (self.x > 1 - self.radius):
+          self.x = 1 - self.radius
+
+          # Bounce off of the wall and slow down the ball
+          self.velocity_x = (self.velocity_x * -1) * friction_mod
+          
+          # Ensure the velocity never goes below 0, so it always moves
+          if abs(self.velocity_x) < min_velocity:
+              self.velocity_x = -min_velocity
+
+       # Top bounds collisions
+      if (self.y > 1 - self.radius):
+          self.y = 1 - self.radius
+
+          # Bounce off of the wall and slow down the ball
+          self.velocity_y = (self.velocity_y * -1) * friction_mod
+          
+          # Ensure the velocity never goes below 0, so it always moves
+          if abs(self.velocity_y) < min_velocity:
+              self.velocity_y = -min_velocity
+
+      # Floor bounds collisions
+      if (self.y < -1 + self.radius):
+          # When the ball touches the bottom of the screen
+          # A life is lost and the ball is disabled
+          self.onoff = OnOff.OFF
+          lives -= 1
+
+          # If the player has no lives left, return to the main menu
+          if lives <= 0:
+              # Save the current score and push to the high score database
+              score_db = PlayerScore("Player", score, current_level)
+              score_db.save_to_database()
+
+              current_state = "MENU"
+          # Else, allow the player to launch a new ball
+          else:
+              can_launch = True
+```
+```python
+  def draw_ball(self):
+      # Only render the ball if it is "on" (not destroyed)
+      if (self.onoff == OnOff.ON):
+          glColor3f(self.red, self.green, self.blue)
+          glBegin(GL_POLYGON)
+          for i in range(360):
+              deg_in_rad = i * DEG2RAD
+              glVertex2f((math.cos(deg_in_rad) * self.radius) + self.x,
+                         (math.sin(deg_in_rad) * self.radius) + self.y)
+
+          glEnd()
+```
+
+***Original C++ Artifact from CS-330: collision checking for reflective bricks***
+```cpp
+	// Check collision for bricks
+	void CheckCollision(Brick* brk)
+	{
+		// If the circle is off, don't check for collision between circle and brick
+		if (onoff == OFF)
+		{
+			return;
+		}
+
+		if (brk->brick_type == REFLECTIVE)
+		{
+			if ((x > brk->x - brk->width && x <= brk->x + brk->width) && (y > brk->y - brk->width && y <= brk->y + brk->width))
+			{
+				direction = GetRandomDirection();
+
+				// Adding direction-based offsets to move the ball slightly above the paddle so it does not get stuck
+				// "Sticky paddle" issue referenced here https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-resolution
+				if (x < brk->x)
+				{
+					x -= 0.02;
+				}
+				else
+				{
+					x += 0.02;
+				}
+
+				if (y < brk->y)
+				{
+					y -= 0.02;
+				}
+				else
+				{
+					y += 0.02;
+				}
+
+				// For the "Alter the state of the bricks upon collision" requirement
+				// Increment the color of the brick by 0.1 for each color channel
+				brk->red += 0.1f;
+				brk->green += 0.1f;
+				brk->blue += 0.1f;
+
+				// Wrap each color channel around to 0 once it reaches > 1.0
+				if (brk->red > 1.0f)
+				{
+					brk->red = 0.0f;
+				}
+				if (brk->green > 1.0f)
+				{
+					brk->green = 0.0f;
+				}
+				if (brk->blue > 1.0f)
+				{
+					brk->blue = 0.0f;
+				}
+			}
+		}
+```
+
+***Enhanced Python Artifact: AABB collision checking, logic split to handle brick and paddle differently***
+```python
+  # Check collision with bricks and paddles using AABB
+  def check_collision(self, obj):
+
+      # Check if the passed obj is a brick or a paddle
+      # The ball can collide with both, both use AABB collision detection
+      isbrick = isinstance(obj, Brick)
+      ispaddle = isinstance(obj, Paddle)
+
+      # If the ball or brick is off, don't check for collision
+      if (self.onoff == OnOff.OFF or obj.onoff == OnOff.OFF):
+          return
+
+      # Define a bounding box for the ball for AABB collision detection
+      half_width = obj.width / 2
+      if isbrick:
+          # Bricks are square and have no height component
+          half_height = half_width
+      elif ispaddle:
+          half_height = obj.height / 2
+
+      min_x = obj.x - half_width
+      max_x = obj.x + half_width
+      min_y = obj.y - half_height
+      max_y = obj.y + half_height
+
+      # Find the closest points on X and Y
+      # AABB closest point reference adapted from:
+      # https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection
+      closest_x = max(min_x, min(self.x, max_x))
+      closest_y = max(min_y, min(self.y, max_y))
+
+      # Find the distance between the ball's center and this closest point
+      distance_x = self.x - closest_x
+      distance_y = self.y - closest_y
+
+      # Calculate the distance length using the Pythagorean theorem
+      # Translated from C++ OpenGL glm::length() from:
+      # https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection
+      distance_length = math.sqrt((distance_x ** 2) + (distance_y ** 2))
+      
+      # Check if the distance is less than the ball's radius
+      # to determine collision events
+      if (distance_length < self.radius):
+          # Safety check so we don't divide by zero
+          if distance_length == 0:
+              distance_length = 0.001
+
+          # If the collision is with a brick
+          if isbrick:
+              self.brick_collision(obj,
+                                   distance_length,
+                                   distance_x,
+                                   distance_y)
+          # If the collision is with a paddle
+          elif ispaddle:
+               self.paddle_collision(obj,
+                                     half_width,
+                                     half_height)
+```
+```python
+  # Collision event with a brick
+  def brick_collision(self, obj, distance_length, distance_x, distance_y):
+      global score
+
+      # Normalize the distance vector to get the collision normal
+      # Collision resolution concepts adapted from:
+      # https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-resolution
+      normal_x = distance_x / distance_length
+      normal_y = distance_y / distance_length
+
+      # Reflect the ball's direction based on the collision normal
+      # Reflection vector math adapted from:
+      # https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+      dot_product = (self.velocity_x * normal_x) + (self.velocity_y * normal_y)
+
+      # Update the ball's velocity based on the reflection formula
+      self.velocity_x = self.velocity_x - (2 * dot_product * normal_x)
+      self.velocity_y = self.velocity_y - (2 * dot_product * normal_y)
+
+      # Adding direction-based offsets to move the ball slightly
+      # above the paddle so it does not get stuck
+      # "Sticky paddle" issue referenced here:
+      # https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-resolution
+      self.x += normal_x * (self.radius - distance_length)
+      self.y += normal_y * (self.radius - distance_length)
+
+      # Check the brick type
+      # Reflective bricks should change color on collision,
+      # but not be destroyed
+      if obj.brick_type == BrickType.REFLECTIVE:
+          # Increment the color of the brick by 0.1 for each color channel
+          obj.red += 0.1
+          obj.green += 0.1
+          obj.blue += 0.1
+
+          # Wrap each color channel around to 0 once it reaches > 1.0
+          if (obj.red > 1.0):
+              obj.red = 0.0
+          if (obj.green > 1.0):
+              obj.green = 0.0
+          if (obj.blue > 1.0):
+              obj.blue = 0.0
+          
+      # Destructable bricks should decrement their hit count
+      # and be destroyed if hits_remaining <= 0
+      elif (obj.brick_type == BrickType.DESTRUCTABLE):
+          # Decrement the hits remaining for the destructible brick
+          obj.hits_remaining -= 1
+
+          if obj.hits_remaining <= 0:
+              obj.onoff = OnOff.OFF
+              # Increment score when a destructible brick is destroyed
+              score += 100
+          else:
+              # Decrement the color of the brick by 0.1
+              # for each color channel
+              obj.red -= 0.1
+              obj.green -= 0.1
+              obj.blue -= 0.1
+
+              # Wrap each color channel around to 0 once it reaches > 1.0
+              if (obj.red < 0.0):
+                  obj.red = 1.0
+              if (obj.green < 0.0):
+                  obj.green = 1.0
+              if (obj.blue < 0.0):
+                  obj.blue = 1.0
+                  
+              # Increment score when a destructible brick is hit
+              # but not destroyed
+              score += 20
+```
+```python
+  # Collision event with a paddle
+  def paddle_collision(self, obj, half_width, half_height):
+      # Calculate where the ball hit the paddle on the X axis
+      # Used the following as reference for velocity calculation:
+      # https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-resolution
+      hit_pos_x = (self.x - obj.x) / half_width
+
+      # Additional strength/speed to add to the ball after a hit
+      velocity_mod = 0.01
+      self.velocity_x = hit_pos_x * velocity_mod
+
+      # Move the ball slightly above the paddle
+      # so it does not get stuck
+      # "Sticky paddle" issue referenced here:
+      # https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-resolution
+      self.velocity_y = abs(self.velocity_y)
+      self.y = obj.y + half_height + self.radius
+```
+
+***Original C++ Artifact from CS-330: paddle defined as a brick type data structure, with a paddle being three different bricks***
+```cpp
+  // Define brick types
+  // Added direction-specific reflection bricks for the paddle
+  enum BRICKTYPE { REFLECTIVE, DESTRUCTABLE, REFLECT_UP, REFLECT_UP_LEFT, REFLECT_UP_RIGHT};
+  enum ONOFF { ON, OFF };
+  
+  class Brick
+  {
+  public:
+  	float red, green, blue;
+  	float x, y, width;
+  	BRICKTYPE brick_type;
+  	ONOFF onoff;
+  
+  	Brick(BRICKTYPE bt, float xx, float yy, float ww, float rr, float gg, float bb)
+  	{
+  		brick_type = bt; x = xx; y = yy, width = ww; red = rr, green = gg, blue = bb;
+  		onoff = ON;
+  	};
+  
+  	void drawBrick()
+  	{
+  		if (onoff == ON)
+  		{
+  			double halfside = width / 2;
+  
+  			glColor3d(red, green, blue);
+  			glBegin(GL_POLYGON);
+  
+  			glVertex2d(x + halfside, y + halfside);
+  			glVertex2d(x + halfside, y - halfside);
+  			glVertex2d(x - halfside, y - halfside);
+  			glVertex2d(x - halfside, y + halfside);
+  
+  			glEnd();
+  		}
+  	}
+  };
+```
+```cpp
+  // Define a paddle using the brick as the base
+  // Defining it in parts so we can affect collision direction based on where the ball hits the paddle
+  Brick paddleCenter(REFLECT_UP, 0, -0.9, 0.1, 1, 0, 0);
+  Brick paddleLeft(REFLECT_UP_LEFT, -0.1, -0.9, 0.1, 1, 0, 0);
+  Brick paddleRight(REFLECT_UP_RIGHT, 0.1, -0.9, 0.1, 1, 0, 0);
+```
+
+***Enhanced Python Artifact: paddle data structure created (distinct from brick types), player score data structure created to hold scores***
+```python
+  # Define the Paddle class
+  class Paddle:
+      def __init__(self, pos_x, pos_y):
+          self.x = pos_x
+          self.y = pos_y
+          # The paddle size and color will not change, so define those here
+          self.width = 0.4
+          self.height = 0.1
+          self.onoff = OnOff.ON
+  
+      def draw_paddle(self):
+          glColor3d(1, 0, 0)
+          glBegin(GL_POLYGON)
+  
+          glVertex2d(self.x + self.width / 2, self.y + self.height / 2)
+          glVertex2d(self.x + self.width / 2, self.y - self.height / 2)
+          glVertex2d(self.x - self.width / 2, self.y - self.height / 2)
+          glVertex2d(self.x - self.width / 2, self.y + self.height / 2)
+  
+          glEnd()
+```
+```python
+  # Define a paddle for the player to use to launch and reflect balls at position
+  paddle = Paddle(0, -0.9)
+```
+```python
+  # Define the data structure for the player score
+  # This will be pushed to a MySQL database that holds high scores
+  # This will be expanded upon for the Databases enhancement
+  class PlayerScore:
+      def __init__(self, player_name, player_score, highest_level):
+          self.id = None
+          self.player_name = player_name
+          self.player_score = player_score
+          self.highest_level = highest_level
+          self.timestamp = None
+  
+      def save_to_database(self):
+          # Get the timestamp via datetime
+          self.timestamp = datetime.datetime.now()
+  
+          # TODO: push to MySQL database
+          # TODO: sanitize input for security
+  
+          print(f"FINAL SCORE | Player Name: {self.player_name}, Score: {self.player_score}, Level: {self.highest_level}, Timestamp: {self.timestamp}")
+```
 
 3.	Did you meet the course outcomes you planned to meet with this enhancement in Module One? Do you have any updates to your outcome-coverage plans?
 
