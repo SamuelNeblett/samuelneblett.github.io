@@ -173,7 +173,6 @@ The artifact selected for the second enhancement, Algorithms and Data Structure,
 This artifact should be included in my ePortfolio because it demonstrates my ability to develop a gameplay loop that implements complex trajectory calculations, collision detection algorithms like axis-aligned bounding box (AABB) checking, and data structure creation. I selected this item because the original artifact from CS-330 handled several algorithms poorly and lumped data structures together illogically. Specifically, trajectory was very poorly calculated, only allowing the ball to go randomly in one of eight directions. The artifact also did not handle collision well, and data structures for the brick class and paddle were needlessly combined. Additionally, I was able to add a new data structure to the project to handle score tracking.
 Original C++ artifact for CS-330 – ball (originally named “Circle”) trajectory limited to 8 directions, picked randomly:
 
-
 ***Original C++ Artifact from CS-330: Ball (originally named “Circle” here) trajectory limited to 8 directions, picked randomly***
 ```cpp
   class Circle
@@ -732,8 +731,6 @@ I have met the third course outcome, “design and evaluate computing solutions 
 
 The trajectory calculations were the most difficult part of this enhancement. AABB itself ended up being relatively easy to calculate and was somewhat covered in some of the reading materials for CS-330, but calculating the trajectory, which is triggered after collision detection, took much longer than expected. The reading for CS-330 that covered AABB utilized glm::length(difference) to find the distance, but there does not appear to be an equivalent in Python, so I had to calculate it manually with the Pythagorean theorem (de Vries, n.d.). I am rusty on my linear algebra, but I later found a math reference mentioning that I need to normalize the vector before finding the dot product to get the reflection vector (Phrogz). This was a challenging experience, but fun. I have past experience with calculating inverse vectors for some work applications (e.g., billboarding planes towards a camera), but never anything exactly like this, so it was a fun exercise.
 
-
-
 # Enhancement Three: Databases - Narrative
 1.	Briefly describe the artifact. What is it? When was it created?
 
@@ -742,27 +739,220 @@ The original artifact selected for the Databases enhancement is the 8-2 Coding C
 2.	Justify the inclusion of the artifact in your ePortfolio. Why did you select this item? What specific components of the artifact showcase your skills and abilities in software development? How was the artifact improved?
 
 I chose this artifact because it represents a full-stack application, with the inclusion of a database backend to handle persistent high scores with CRUD functionality, that is fully playable end-to-end. This showcases my skills in software development by demonstrating that I have an understanding of frontend and backend development and how to integrate both inside one package. This artifact was improved from its original state of not having any score saving capability or database to now including a fully working SQL database to store player scores, which demonstrates my ability to take an existing application and make functional improvements using databases. Specifically, I added the breakout_db SQL database with sqlite3, a player_scores table to store all player scores, a PlayerScore data structure to store player data, a function to save player data to the database, a function to show the top 10 high scores in a new High Scores screen, a function to wipe all high scores, and a feature for players to input their name before beginning a playthrough.
-Enhanced Python artifact: breakout_db SQL database and player_scores table creation with sqlite3:
-<img width="332" height="54" alt="image" src="https://github.com/user-attachments/assets/b1e1126f-8205-4f18-9f10-b2f6ae838b45" />
-<img width="975" height="368" alt="image" src="https://github.com/user-attachments/assets/af4af10c-a898-4fdf-8ceb-52dcd987cd25" />
 
-Enhanced Python artifact: PlayerScore data structure to store player data:
-<img width="895" height="316" alt="image" src="https://github.com/user-attachments/assets/312b1a28-d347-4c51-903e-62864a254181" />
+***Enhanced Python Artifact: breakout_db SQL database and player_scores table creation with sqlite3***
+```python
+import sqlite3
+```
+```python
+# Initialize the SQLite database for high scores
+# Concepts for the creation of the database and table referenced from:
+# https://www.tutorialspoint.com/sqlite/sqlite_python.htm
+def init_database():
+    # Try/except block to catch any database errors, referenced from:
+    # https://www.geeksforgeeks.org/python/how-to-connect-to-sqlite-database-that-resides-in-the-memory-using-python/
+    try:
+        connection = sqlite3.connect("breakout_db.db")
+        cursor = connection.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS player_scores
+                           (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                           player_name TEXT NOT NULL,
+                           player_score INTEGER NOT NULL,
+                           highest_level INTEGER NOT NULL,
+                           timestamp TEXT NOT NULL);''')
+        connection.commit()
+    except Exception as e:
+        print(f"Database error occurred on initialization: {e}")
+    finally:
+        connection.close()
+```
 
-Enhanced Python artifact: function to save player data to the SQL database (breakout_db):
-<img width="975" height="1278" alt="image" src="https://github.com/user-attachments/assets/4ebd865b-a5bb-466a-b44a-b9ccecef98c4" />
+***Enhanced Python Artifact: PlayerScore data structure to store player data***
+```python
+# Define the data structure for the player score
+# This will be pushed to a MySQL database that holds high scores
+# This will be expanded upon for the Databases enhancement
+class PlayerScore:
+    def __init__(self, player_name, player_score, highest_level):
+        self.id = None
+        self.player_name = player_name
+        self.player_score = player_score
+        self.highest_level = highest_level
+        self.timestamp = None
+```
 
-Enhanced Python artifact: function to show the top 10 high scores in a new High Scores screen:
-<img width="975" height="608" alt="image" src="https://github.com/user-attachments/assets/4797c622-2016-45b2-b249-94905c23c976" />
-<img width="900" height="813" alt="image" src="https://github.com/user-attachments/assets/21bb6cd0-e6be-4515-9fd7-20075c985f22" />
+***Enhanced Python Artifact: function to save player data to the SQL database (breakout_db)***
+```python
+def save_to_database(self):
+	# Get the timestamp via datetime
+	self.timestamp = str(datetime.datetime.now())
+
+	# Sanitize the player name to prevent SQL injection
+	# This is for the security mindset capstone requirement
+	# Remove illegal characters from the player name
+	sanitized_name = self.player_name.strip()
+	sanitized_name = sanitized_name.replace("'", "")
+	sanitized_name = sanitized_name.replace('"', "")
+	sanitized_name = sanitized_name.replace(";", "")
+	sanitized_name = sanitized_name.replace("--", "")
+
+	# Attempt to connect to the database
+	try:
+		connection = sqlite3.connect("breakout_db.db")
+		cursor = connection.cursor()
+
+		# Query player_scores table to check if the player already exists
+		# Bind the queried data to ? to prevent SQL injection
+		# "Always use [?] instead of string formatting to bind Python
+		# values to SQL statements, to avoid SQL injection attacks" source:
+		# https://docs.python.org/3/library/sqlite3.html
+		cursor.execute('''SELECT player_score FROM player_scores WHERE player_name = ?''',
+					   (sanitized_name,))
+		existing_score = cursor.fetchone()
+
+		# If no score for the player exists
+		if existing_score is None:
+			# Insert the new player score
+			cursor.execute('''INSERT INTO player_scores (player_name,
+														 player_score,
+														 highest_level,
+														 timestamp)
+						   VALUES (?, ?, ?, ?)''', (sanitized_name,
+													self.player_score,
+													self.highest_level,
+													self.timestamp))
+		# Else if the player already exists in the database
+		# So update their score if it's higher
+		elif self.player_score > existing_score[0]:
+			# Update the existing player score if it's higher
+			cursor.execute('''UPDATE player_scores SET player_score = ?,
+						   highest_level = ?,
+						   timestamp = ? WHERE player_name = ?''',
+						   (self.player_score,
+							self.highest_level,
+							self.timestamp,
+							sanitized_name))
+		
+		connection.commit()
+	except Exception as e:
+		print(f"Database error occurred during save: {e}")
+	finally:
+		connection.close()
+```
+
+***Enhanced Python Artifact: function to show the top 10 high scores in a new High Scores screen***
+```python
+# Fetch the top 10 high scores from the database
+def get_high_scores():
+    scores = []
+    # Attempt to connect to the database
+    try:
+        connection = sqlite3.connect("breakout_db.db")
+        cursor = connection.cursor()
+
+        # Select the top 10 entries in player_score in descending order
+        cursor.execute('''SELECT player_name,
+                       player_score,
+                       highest_level,
+                       timestamp FROM player_scores
+                       ORDER BY player_score DESC LIMIT 10''')
+        scores = cursor.fetchall()
+    except Exception as e:
+        print(f"Database error occurred while fetching high scores: {e}")
+    finally:
+        connection.close()
+    
+    # Return the top 10 high scores
+    return scores
+```
+```python
+# High scores loop
+	if current_state == "HIGH_SCORES":
+		# Set the window size and position
+		# It needs to be bigger than the default size to fit
+		# all the possible high scores
+		imgui.set_next_window_size(imgui.ImVec2(570, 570))
+		imgui.set_next_window_pos(imgui.ImVec2(15, 15))
+
+		imgui.begin("High Scores")
+		
+		# Draw text and separator for the high scores window
+		imgui.text("Top 10 High Scores:")
+		imgui.separator()
+
+		# Display a note if there are no high scores in the database
+		if (len(high_scores) == 0):
+			imgui.text("No high scores recorded!")
+		# Else, display the top 10 high scores
+		else:
+			# Scores are tuples, display by row
+			rank = 1
+			for row in high_scores:
+				imgui.text(f"{rank}) {row[0]} | "
+						   f"Score: {row[1]} | "
+						   f"Level: {row[2]} | "
+						   f"Timestamp: {row[3]}")
+				rank += 1
+```
 
 Enhanced Python artifact: function to wipe all high scores:
-<img width="938" height="432" alt="image" src="https://github.com/user-attachments/assets/9b70f03e-7c81-453d-a1bf-18ad019dfb4a" />
-<img width="757" height="170" alt="image" src="https://github.com/user-attachments/assets/9071b512-95a9-4dc0-844b-240effe54a20" />
 
-Enhanced Python artifact: feature added for players to input their names for high scores
-<img width="701" height="103" alt="image" src="https://github.com/user-attachments/assets/d1ff0e88-f5ca-4157-8bb8-383f270d4857" />
-<img width="975" height="678" alt="image" src="https://github.com/user-attachments/assets/61821f34-515b-4bac-b7b3-42668728f8c4" />
+***Enhanced Python Artifact: function to wipe all high scores***
+```python
+# Delete all high scores from the database
+def delete_all_scores():
+    # Attempt to connect to the database
+    try:
+        connection = sqlite3.connect("breakout_db.db")
+        cursor = connection.cursor()
+
+        # Delete all entries from the player_scores table
+        cursor.execute('''DELETE FROM player_scores''')
+        connection.commit()
+    except Exception as e:
+        print(f"Database error occurred while deleting scores: {e}")
+    finally:
+        connection.close()
+```
+```python
+# Button to wipe all high scores from the database
+if imgui.button("Wipe High Scores"):
+	delete_all_scores()
+	high_scores.clear()
+	print("All high scores removed from the database!")
+```
+
+***Enhanced Python Artifact: feature added for players to input their names for high scores***
+```python
+# Gloabal variables for tracking gameplay
+# Name for the current player, used for high scores
+player_name = "Player"
+```
+```python
+# Name entry loop
+if current_state == "NAME_ENTRY":
+	imgui.begin("Enter Name")
+
+	# Input text field for the player to enter their name
+	# pyimgui reference for input text used here:
+	# https://pyimgui.readthedocs.io/en/latest/reference/imgui.core.html
+	changed, player_name = imgui.input_text('##Player', player_name)
+	
+	# Confirm the entered name and start the game
+	if imgui.button("Start Game"):
+		score = 0
+		lives = 5
+		current_level = 1
+		paddle.x = 0
+		load_level(current_level)
+		current_state = "PLAYING"
+
+	# Return to the main menu
+	if imgui.button("Back to Main Menu"):
+		current_state = "MENU"
+	
+	imgui.end()
+```
 
 3.	Did you meet the course outcomes you planned to meet with this enhancement in Module One? Do you have any updates to your outcome-coverage plans?
 
